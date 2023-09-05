@@ -1,0 +1,35 @@
+Problem:
+We are playing the Guessing Game. The game will work as follows:
+
+I pick a number between 1 and n.
+You guess a number.
+If you guess the right number, you win the game.
+If you guess the wrong number, then I will tell you whether the number I picked is higher or lower, and you will continue guessing.
+Every time you guess a wrong number x, you will pay x dollars. If you run out of money, you lose the game.
+Given a particular n, return the minimum amount of money you need to guarantee a win regardless of what number I pick.
+
+Code:
+class Solution {
+public:
+    int getMoneyAmount(int n) {
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        for(int len=2;len<=n;len++){
+            for(int begin=0;begin<=n-len;begin++){
+                int end=begin+len;
+                for(int i=begin;i<end;i++){
+                    int numpicked=i+1;
+                    if(i==begin){
+                        dp[begin][end]=numpicked+dp[begin+1][end];
+                    }
+                    else{
+                        dp[begin][end]=min ( dp[begin][end] , max(dp[begin][i] , dp[i+1][end] ) + numpicked );
+                    }
+                }
+            }
+        }
+        return dp[0][n];
+    }
+};
+
+Thought process:
+dekho hmne na sbse range li h aur us range ki length ko len bola h. ab agar len=1 hoga to mtlb ek hi number h aur usko guess krne ki cost to 0 hi hogi. to isliye len 2 se start kri h. uske baad begin jo h number guess krne vala begin aur usme len add krdia to hmare paas end aagya. fir hmne us begin to end me search krna shuru kia h pehle numpicked lia h vo i+1 isliye kia h kyuki jo number h vo to 1 se start h aur hmara begin 0 se to isliye 1 add kia h. fir jb iterate krre hain tb agar hm begin pr hi hain to worst case me numpicked ka cost + uske aage valon me search krne ka cost but if beech me hain to hm max lenge numpicked ke left aur right ka, max isliye lenge kyuki hme worst case ka nikalna h aur use fir already jo us range ke liye value hogi usse compare krke minimum lenge. aur ending me dp[0][n] isliye return kia kyuki hmara jo ans h vo to hme to 1 to n ke liye hi nikalna tha na vo jo begin aur end me dhund rhe the vo to subproblems thi hmari.
