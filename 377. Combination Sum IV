@@ -1,0 +1,28 @@
+Problem:
+Given an array of distinct integers nums and a target integer target, return the number of possible combinations that add up to target.
+
+The test cases are generated so that the answer can fit in a 32-bit integer.
+
+Code:
+class Solution {
+public:
+    int f(vector<int> nums, int target,int n, vector<int> &dp){
+        if(target==0) return 1;
+        if(dp[target]!=-1) return dp[target];
+        int res=0;
+        for(int i=0;i<n;i++){
+            if(nums[i]<=target){
+                res+=f(nums,target-nums[i],n,dp);
+            }
+        }
+        return dp[target]=res;
+    }
+    int combinationSum4(vector<int>& nums, int target) {
+        int n=nums.size();
+        vector<int> dp(target+1,-1);
+        return f(nums,target,n,dp);
+    }
+};
+
+Thought:
+isme na hm target me se element minus krte hain fir aur fir us naye target tk kitne combination bne vo add krdete hain, aur yahi end tk krte rehte hain.
