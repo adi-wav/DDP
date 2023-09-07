@@ -1,0 +1,40 @@
+Problem:
+A frog is crossing a river. The river is divided into some number of units, and at each unit, there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.
+
+Given a list of stones positions (in units) in sorted ascending order, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be 1 unit.
+
+If the frog's last jump was k units, its next jump must be either k - 1, k, or k + 1 units. The frog can only jump in the forward direction.
+
+Code:
+class Solution {
+public:
+    int dp[2000][2000];
+    unordered_map<int,int> mp;
+    bool f(int i, int jl, vector<int> &stones){
+        if(i==stones.size()-1) return true;
+        if(dp[i][jl]!=-1) return dp[i][jl];
+        bool a=false,b=false,c=false;
+        if(mp.find(stones[i]+jl)!=mp.end()){
+            a=f(mp[stones[i]+jl],jl,stones);
+        }
+        if(jl>1 && mp.find(stones[i]+jl-1)!=mp.end()){
+            b=f(mp[stones[i]+jl-1],jl-1,stones);
+        }
+        if(mp.find(stones[i]+jl+1)!=mp.end()){
+            c=f(mp[stones[i]+jl+1],jl+1,stones);
+        }
+        return dp[i][jl]=a || b || c;
+    }
+    bool canCross(vector<int>& stones) {
+        if(stones[1]-stones[0]!=1) return false;
+        if(stones.size()==2) return stones[1]-stones[0]==1;
+        for(int i=0;i<stones.size();i++){
+            mp[stones[i]]=i;
+        }
+        memset(dp,-1,sizeof(dp));
+        return f(1,1,stones);
+    }
+};
+
+Thought:
+sbse pehle hmne ek map bnaya aur usme index ke sath stone ki position daldi. uske baad position 1 se shuru kia aur jumplength(jl) me +1 +0, -1 krke dhunda map me agar mil gya to fir hmne sidha jitna jl tha + jo stone ki position thi jahan pr pahuche the jump lgakr vo hmara naya index hogya aur jl bhi hm update krdenge. ab agar ese krte krte vo n-1 index pr pahuch jata h to return true aur agar kahin false aata h to false return krdo
